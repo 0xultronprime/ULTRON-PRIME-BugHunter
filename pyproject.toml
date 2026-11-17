@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ultron-prime-bughunter"
+version = "1.0.0"
+description = "ultron — ULTRON PRIME BugHunter CLI (fork of claude-bughunter): VRT-aware triage, HTML reports, 86 skills"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "ULTRON PRIME (fork; original by Sachin Sharma)" }]
+keywords = ["security", "bug-bounty", "recon", "claude", "pentest", "ultron-prime"]
+dependencies = []
+
+[project.optional-dependencies]
+# `requests` is optional — cbh falls back to urllib when it's absent.
+http = ["requests"]
+
+[project.urls]
+Homepage = "https://www.youtube.com/@ultronprime_zero"
+Documentation = "https://github.com/elementalsouls/Claude-BugHunter/blob/main/docs/cbh-cli.md"
+
+[project.scripts]
+cbh = "cbh.cli:main"
+ultron = "ultron:main"
+
+[tool.setuptools]
+packages = ["cbh", "ultron"]
+py-modules = ["ultron"]
+
+[tool.setuptools.package-data]
+cbh = ["data/*.json"]

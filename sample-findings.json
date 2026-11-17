@@ -1,0 +1,46 @@
+{
+  "findings": [
+    {
+      "accepted_impact": true,
+      "endpoint": "/profile/bio",
+      "evidence": [
+        "POST /profile/bio with payload <script>alert(document.domain)</script> returned 200",
+        "Visiting the victim profile page executed the payload (screenshot in evidence pack)"
+      ],
+      "impact": "Stored XSS executes for every user viewing the profile; session theft possible",
+      "in_scope": true,
+      "reproducible": true,
+      "target": "example.com",
+      "title": "Stored XSS in profile bio executes for all viewers",
+      "type": "xss-stored"
+    },
+    {
+      "accepted_impact": true,
+      "endpoint": "/api/invoices/1024",
+      "evidence": [
+        "GET /api/invoices/1024 as user A returned user B's invoice (name, address, total)",
+        "Changing the ID to 1025 returned another user's invoice \u2014 no authorization check"
+      ],
+      "impact": "Any authenticated user can read other users' invoices (PII + billing data)",
+      "in_scope": true,
+      "reproducible": true,
+      "target": "example.com",
+      "title": "IDOR lets any user read another user's invoice",
+      "type": "idor"
+    },
+    {
+      "accepted_impact": false,
+      "endpoint": "/settings",
+      "evidence": [],
+      "impact": "Theoretical only \u2014 no sensitive action was shown to be framable, no PoC",
+      "in_scope": true,
+      "reproducible": false,
+      "target": "example.com",
+      "title": "Clickjacking on settings page (no impact demonstrated)",
+      "type": "clickjacking"
+    }
+  ],
+  "program": "SAMPLE ONLY \u2014 fictional target for demo purposes. Do not test example.com; it is not in scope for anyone.",
+  "target": "example.com",
+  "note": "SAMPLE ONLY \u2014 all three findings are fictional examples against example.com (a reserved documentation domain). Never test example.com or any real target without authorization."
+}
