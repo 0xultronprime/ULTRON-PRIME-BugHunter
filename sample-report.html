@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ULTRON PRIME BugHunter — Report — example.com</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #050505; color: #e8e8e8; font-family: 'Segoe UI', Arial, sans-serif; }
+  header { background: linear-gradient(135deg, #0a0a0a 0%, #1a0505 55%, #2b0202 100%); border-bottom: 3px solid #ff2a2a; padding: 32px 24px; }
+  header h1 { margin: 0; font-size: 34px; letter-spacing: 2px; color: #f2f2f2; }
+  header h1 span { color: #ff2a2a; }
+  header p { color: #c0c0c0; margin: 6px 0 0; }
+  main { max-width: 960px; margin: 0 auto; padding: 24px; }
+  .summary { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 20px; }
+  .stat { background: #111; border: 1px solid #333; border-left: 4px solid #ff2a2a; padding: 12px 16px; min-width: 130px; }
+  .stat b { display: block; font-size: 26px; color: #fff; }
+  .auth { background: #160404; border: 1px solid #ff2a2a; padding: 14px 16px; font-size: 14px; line-height: 1.5; margin-bottom: 24px; }
+  .finding { background: #0d0d0d; border: 1px solid #2a2a2a; border-left: 4px solid #ff2a2a; padding: 18px 20px; margin-bottom: 20px; }
+  .finding h2 { margin: 0 0 10px; color: #fff; }
+  .finding h3 { color: #ff5a5a; margin: 16px 0 6px; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
+  .badge { display: inline-block; color: #000; font-weight: 700; padding: 3px 10px; border-radius: 3px; margin-right: 6px; }
+  .badge.verdict { color: #fff; }
+  .tag { display: inline-block; background: #1c1c1c; border: 1px solid #444; color: #ccc; padding: 3px 8px; border-radius: 3px; margin-right: 6px; font-size: 13px; }
+  .gate li.pass { color: #7ee2a0; } .gate li.fail { color: #ff7a7a; }
+  ul { line-height: 1.55; } footer { text-align: center; color: #777; font-size: 13px; padding: 20px; border-top: 1px solid #222; }
+  code { color: #ff8a8a; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ULTRON <span>PRIME</span> &mdash; BUGHUNTER REPORT</h1>
+  <p>Target: example.com &middot; Program: SAMPLE ONLY — fictional target for demo purposes. Do not test example.com; it is not in scope for anyone. &middot; Generated: 2026-11-17 19:35 UTC &middot; ULTRON PRIME BugHunter v1.0.0</p>
+</header>
+<main>
+  <div class="summary">
+    <div class="stat"><b>3</b>findings triaged</div>
+    <div class="stat"><b>2</b>report-ready</div>
+    <div class="stat"><b>0</b>downgrade</div>
+    <div class="stat"><b>1</b>killed</div>
+  </div>
+  <div class="auth"><strong>&#9888; AUTHORIZATION STATEMENT — All findings in this report were produced during authorized testing only: assets owned by the tester, in-scope bug-bounty targets, an authorized penetration test under a signed Rules of Engagement, or a lab / CTF target. No unauthorized target was tested. If a finding required going beyond authorized scope to prove impact, it was downgraded or killed — never exploited further.</strong></div>
+  
+        <section class="finding">
+          <h2>Stored XSS in profile bio executes for all viewers</h2>
+          <p class="meta">
+            <span class="badge" style="background:#ff6b1a">High &middot; 7.3/10</span>
+            <span class="badge verdict" style="background:#22c55e">REPORT-READY</span>
+            <span class="tag">Cross-Site Scripting (XSS) — Stored</span>
+            <span class="tag">Confidence: High</span>
+            <span class="tag">Target: example.com</span>
+          </p>
+          <h3>Evidence</h3>
+          <ul><li>POST /profile/bio with payload &lt;script&gt;alert(document.domain)&lt;/script&gt; returned 200</li><li>Visiting the victim profile page executed the payload (screenshot in evidence pack)</li></ul>
+          <h3>Impact</h3>
+          <p>Stored XSS executes for every user viewing the profile; session theft possible</p>
+          <h3>7-Question Gate</h3>
+          <ul class="gate"><li class="pass">&#10003; Q1: Can an attacker use this RIGHT NOW, step by step? (reproducible request + observable result)</li><li class="pass">&#10003; Q2: Is the impact on the program&#x27;s accepted impact list? (not a listed exclusion)</li><li class="pass">&#10003; Q3: Is the root cause in an in-scope asset? (in-scope domain, production unless stated)</li><li class="pass">&#10003; Q4: Is the impact real, not theoretical? (data read/modified/deleted, account or money affected)</li><li class="pass">&#10003; Q5: Is this a duplicate of a known / already-reported issue?</li><li class="pass">&#10003; Q6: Is the evidence complete and clean? (repro steps, request/response, no other-user PII)</li><li class="pass">&#10003; Q7: Is the report title accurate and the severity honest? (no inflated impact)</li></ul>
+          <h3>Triage notes</h3>
+          <ul><li>Strong evidence: multiple evidence items supplied (+0.3).</li></ul>
+        </section>
+
+        <section class="finding">
+          <h2>IDOR lets any user read another user&#x27;s invoice</h2>
+          <p class="meta">
+            <span class="badge" style="background:#ff6b1a">High &middot; 8.0/10</span>
+            <span class="badge verdict" style="background:#22c55e">REPORT-READY</span>
+            <span class="tag">Broken Access Control</span>
+            <span class="tag">Confidence: High</span>
+            <span class="tag">Target: example.com</span>
+          </p>
+          <h3>Evidence</h3>
+          <ul><li>GET /api/invoices/1024 as user A returned user B&#x27;s invoice (name, address, total)</li><li>Changing the ID to 1025 returned another user&#x27;s invoice — no authorization check</li></ul>
+          <h3>Impact</h3>
+          <p>Any authenticated user can read other users&#x27; invoices (PII + billing data)</p>
+          <h3>7-Question Gate</h3>
+          <ul class="gate"><li class="pass">&#10003; Q1: Can an attacker use this RIGHT NOW, step by step? (reproducible request + observable result)</li><li class="pass">&#10003; Q2: Is the impact on the program&#x27;s accepted impact list? (not a listed exclusion)</li><li class="pass">&#10003; Q3: Is the root cause in an in-scope asset? (in-scope domain, production unless stated)</li><li class="pass">&#10003; Q4: Is the impact real, not theoretical? (data read/modified/deleted, account or money affected)</li><li class="pass">&#10003; Q5: Is this a duplicate of a known / already-reported issue?</li><li class="pass">&#10003; Q6: Is the evidence complete and clean? (repro steps, request/response, no other-user PII)</li><li class="pass">&#10003; Q7: Is the report title accurate and the severity honest? (no inflated impact)</li></ul>
+          <h3>Triage notes</h3>
+          <ul><li>Strong evidence: multiple evidence items supplied (+0.3).</li><li>High-value impact claimed (+0.2).</li></ul>
+        </section>
+
+        <section class="finding">
+          <h2>Clickjacking on settings page (no impact demonstrated)</h2>
+          <p class="meta">
+            <span class="badge" style="background:#3ec6ff">Low &middot; 0.8/10</span>
+            <span class="badge verdict" style="background:#ff2a2a">KILL</span>
+            <span class="tag">Clickjacking</span>
+            <span class="tag">Confidence: Low</span>
+            <span class="tag">Target: example.com</span>
+          </p>
+          <h3>Evidence</h3>
+          <em>No evidence supplied.</em>
+          <h3>Impact</h3>
+          <p>Theoretical only — no sensitive action was shown to be framable, no PoC</p>
+          <h3>7-Question Gate</h3>
+          <ul class="gate"><li class="fail">&#10007; Q1: Can an attacker use this RIGHT NOW, step by step? (reproducible request + observable result)</li><li class="fail">&#10007; Q2: Is the impact on the program&#x27;s accepted impact list? (not a listed exclusion)</li><li class="pass">&#10003; Q3: Is the root cause in an in-scope asset? (in-scope domain, production unless stated)</li><li class="fail">&#10007; Q4: Is the impact real, not theoretical? (data read/modified/deleted, account or money affected)</li><li class="pass">&#10003; Q5: Is this a duplicate of a known / already-reported issue?</li><li class="fail">&#10007; Q6: Is the evidence complete and clean? (repro steps, request/response, no other-user PII)</li><li class="pass">&#10003; Q7: Is the report title accurate and the severity honest? (no inflated impact)</li></ul>
+          <h3>Triage notes</h3>
+          <ul><li>No evidence supplied (-1.5); a finding without proof cannot be High/Critical.</li><li>Not reproducible as described (-1.0).</li><li>Impact described as theoretical / none (-1.0).</li><li>7-Question Gate FAILED at Q1: Can an attacker use this RIGHT NOW, step by step? (reproducible request + observable result)</li><li>7-Question Gate FAILED at Q2: Is the impact on the program&#x27;s accepted impact list? (not a listed exclusion)</li><li>7-Question Gate FAILED at Q4: Is the impact real, not theoretical? (data read/modified/deleted, account or money affected)</li><li>7-Question Gate FAILED at Q6: Is the evidence complete and clean? (repro steps, request/response, no other-user PII)</li></ul>
+        </section>
+</main>
+<footer>ULTRON PRIME BugHunter &middot; Fork of elementalsouls/Claude-BugHunter (MIT / CC BY 4.0) &middot; Authorized testing only.</footer>
+</body>
+</html>

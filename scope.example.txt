@@ -1,0 +1,6 @@
+# ULTRON PRIME BugHunter — example scope file for `ultron scan --target X --scope scope.txt`
+# One in-scope domain per line. Lines starting with # are comments.
+# ONLY list domains you own or have written authorization to test.
+# NEVER add a domain you do not have authorization for.
+example.com
+*.example.com
